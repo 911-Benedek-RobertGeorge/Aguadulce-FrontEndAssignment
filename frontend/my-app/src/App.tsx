@@ -1,38 +1,58 @@
-import * as React from "react"
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-} from "@chakra-ui/react"
-import { ColorModeSwitcher } from "./ColorModeSwitcher"
-import { Logo } from "./Logo"
+import * as React from "react";
 
-export const App = () => (
-  <ChakraProvider theme={theme}>
-    <Box textAlign="center" fontSize="xl">
-      <Grid minH="100vh" p={3}>
-        <ColorModeSwitcher justifySelf="flex-end" />
-        <VStack spacing={8}>
-          <Logo h="40vmin" pointerEvents="none" />
-          <Text>
-            Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
-          </Text>
-          <Link
-            color="teal.500"
-            href="https://chakra-ui.com"
-            fontSize="2xl"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn Chakra
-          </Link>
-        </VStack>
-      </Grid>
-    </Box>
-  </ChakraProvider>
-)
+import { ChakraProvider, Box, Text, Link, VStack, Code, Grid, theme, Input, GridItem, Button } from "@chakra-ui/react";
+import { ColorModeSwitcher } from "./ColorModeSwitcher";
+import { Logo } from "./Logo";
+import HookForm from "./components/HookForm";
+import Roles from "./components/rolesTable";
+import { useEffect } from "react";
+
+export const App = () => {
+	const [isMetamaskInstalled, setIsMetamaskInstalled] = React.useState<boolean>(false);
+	const [account, setAccount] = React.useState<string | null>(null);
+
+	useEffect(() => {
+		if ((window as any).ethereum) {
+			//check if Metamask wallet is installed
+			setIsMetamaskInstalled(true);
+		}
+	}, []);
+
+	async function connectWallet(): Promise<void> {
+		//to get around type checking
+		(window as any).ethereum
+			.request({
+				method: "eth_requestAccounts",
+			})
+			.then((accounts: string[]) => {
+				setAccount(accounts[0]);
+			})
+			.catch((error: any) => {
+				alert(`Something went wrong: ${error}`);
+			});
+	}
+	return (
+		<ChakraProvider theme={theme}>
+			<Box marginTop={0} textAlign="center" fontSize="xl">
+				<ColorModeSwitcher padding={10} justifySelf="center" />
+				<VStack spacing={20}>
+					<Button onClick={connectWallet} borderRadius="50" bg="blue.400" color="white" px={100} h={20}>
+						Connect wallet
+					</Button>
+					<Box>
+						<Input marginBottom={11} maxW="md" placeholder="Basic usage" />
+						<Box as="button" borderRadius="md" bg="blue.400" color="white" px={4} h={8}>
+							Add new role
+						</Box>
+					</Box>
+
+					<Box>
+						<h1>Add a role to a member</h1>
+						<HookForm />
+					</Box>
+					<Roles />
+				</VStack>
+			</Box>
+		</ChakraProvider>
+	);
+};
