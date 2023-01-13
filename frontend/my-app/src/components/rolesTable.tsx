@@ -1,7 +1,8 @@
-import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, TableContainer, Button, Box } from "@chakra-ui/react";
-//dont think is a good idea to use that function here
+import { Table, Thead, Tbody, Tr, Th, Td, TableCaption, TableContainer, Box } from "@chakra-ui/react";
+//dont think is a good idea to use that function here, should use components
+//Make a table with the roles names and ids
 export default function Roles({ roles }: { roles: string[] }) {
-	if (roles == null) return <h1>To be shown</h1>;
+	if (roles == null) return <Box></Box>;
 	return (
 		<Box>
 			<TableContainer>

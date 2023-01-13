@@ -3,14 +3,16 @@ import React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+// Would have been easier with just 2 imports, but I wanted to see how working with form is
 export default function HookForm({ contract }: { contract: Contract }) {
 	const {
 		register,
-		getValues,
-		handleSubmit,
+
 		formState: { errors },
 	} = useForm();
 
+	//get the values from the form, I get them onChange,
+	// a better solution would be only to take them on button press
 	const handleChangeAddress = (event: { target: { value: React.SetStateAction<string> } }) => {
 		setAddress(event.target.value);
 	};
@@ -19,33 +21,26 @@ export default function HookForm({ contract }: { contract: Contract }) {
 		setRole(Number(event.target.value));
 	};
 
-	const [data, setData] = useState("");
 	const [address, setAddress] = useState<string>("");
 	const [role, setRole] = useState<number>(-1);
 
+	//Assign a role to an address
 	async function addRole(): Promise<void> {
 		try {
 			if (contract != null) {
 				console.log("start assign role tx");
 
+				//change the string to an address format
 				let addressFormat = ethers.utils.getAddress(address);
 
 				let tx = await contract.addRole(addressFormat, role);
 				console.log(tx.hash);
 				await tx.wait();
-				// if (roleTypes !== null) {
-				// 	let list = roleTypes;
-				// 	list.push(newRoleType);
-				// 	setRoleTypes(list);
-				// 	render(<HookForm />);
-				// }
-				// console.log(roleTypes);
 			}
 		} catch (err) {
 			alert("the address is not a valid address");
 		}
 	}
-	//console.log(errors);
 
 	return (
 		<form>
@@ -61,8 +56,7 @@ export default function HookForm({ contract }: { contract: Contract }) {
 				placeholder="Role type id"
 				{...(register("roleType"), { required: true })}
 			/>
-
-			<p>{data}</p>
+			<br></br>
 			<button type="button" onClick={addRole} style={{ padding: 7, borderRadius: 20, backgroundColor: "#18A5D1", alignSelf: "center" }}>
 				Assign a role
 			</button>

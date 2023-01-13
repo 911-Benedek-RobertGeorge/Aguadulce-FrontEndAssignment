@@ -5,7 +5,6 @@ import { App } from "./App";
 import HookForm from "./components/HookForm";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorker from "./serviceWorker";
-import TheForm from "./components/Form";
 const container = document.getElementById("root");
 if (!container) throw new Error("Failed to find the root element");
 const root = ReactDOM.createRoot(container);
