@@ -1,12 +1,8 @@
 import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, TableContainer, Button, Box } from "@chakra-ui/react";
-
+//dont think is a good idea to use that function here
 export default function Roles() {
 	return (
 		<Box>
-			<Button colorScheme="teal" size="md">
-				Show Roles
-			</Button>
-
 			<TableContainer>
 				<Table variant="simple">
 					<TableCaption>Roles</TableCaption>

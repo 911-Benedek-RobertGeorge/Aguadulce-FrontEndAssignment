@@ -1,0 +1,90 @@
+export const MemberRoleABI = [
+	{ inputs: [], stateMutability: "nonpayable", type: "constructor" },
+	{
+		anonymous: false,
+		inputs: [
+			{ indexed: false, internalType: "address", name: "member", type: "address" },
+			{ indexed: false, internalType: "uint256", name: "activationTime", type: "uint256" },
+			{ indexed: false, internalType: "string", name: "roleType", type: "string" },
+		],
+		name: "RoleAdded",
+		type: "event",
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{ indexed: false, internalType: "address", name: "member", type: "address" },
+			{ indexed: false, internalType: "bool", name: "newRole", type: "bool" },
+			{ indexed: false, internalType: "uint256", name: "timestamp", type: "uint256" },
+		],
+		name: "StateChanged",
+		type: "event",
+	},
+	{
+		inputs: [
+			{ internalType: "address", name: "_member", type: "address" },
+			{ internalType: "uint256", name: "_roleType", type: "uint256" },
+		],
+		name: "addRole",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [{ internalType: "string", name: "_roleType", type: "string" }],
+		name: "addRoleType",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+		name: "addresses",
+		outputs: [{ internalType: "address", name: "", type: "address" }],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{ internalType: "address", name: "_member", type: "address" },
+			{ internalType: "bool", name: "_newState", type: "bool" },
+		],
+		name: "changeRoleStatus",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "getRoleTypes",
+		outputs: [{ internalType: "string[]", name: "", type: "string[]" }],
+		stateMutability: "view",
+		type: "function",
+	},
+	{ inputs: [], name: "membersCount", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
+	{
+		inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+		name: "roleTypes",
+		outputs: [{ internalType: "string", name: "", type: "string" }],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "roleTypesCount",
+		outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [{ internalType: "address", name: "", type: "address" }],
+		name: "userRole",
+		outputs: [
+			{ internalType: "uint256", name: "activationTime", type: "uint256" },
+			{ internalType: "bool", name: "isActive", type: "bool" },
+			{ internalType: "string", name: "roleType", type: "string" },
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+];
