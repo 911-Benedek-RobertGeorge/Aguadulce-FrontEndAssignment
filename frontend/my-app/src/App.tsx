@@ -11,6 +11,7 @@ import { AbiItem } from "web3-utils";
 import Abi from "./utils/MemberRole.json";
 import Web3 from "web3";
 import { MemberRoleABI } from "./utils/abi";
+import { stringify } from "querystring";
 export const App = () => {
 	const [isMetamaskInstalled, setIsMetamaskInstalled] = React.useState<boolean>(false);
 	const [account, setAccount] = React.useState<string>("");
@@ -18,7 +19,7 @@ export const App = () => {
 	const [newRoleType, setNewRoleType] = useState<String>("");
 
 	const [roleTypes, setRoleTypes] = useState<string[] | null>(null);
-	const CONTRACT_ADDRESS = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
+	const CONTRACT_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
 	useEffect(() => {
 		if ((window as any).ethereum) {
@@ -26,6 +27,11 @@ export const App = () => {
 			setIsMetamaskInstalled(true);
 		}
 	}, []);
+
+	useEffect(() => {
+		console.log("Get the contract");
+		if (account !== "" && theContract == null) connectContract();
+	}, [account]);
 
 	async function connectWallet(): Promise<void> {
 		//to get around type checking
@@ -44,10 +50,9 @@ export const App = () => {
 	async function connectContract(): Promise<void> {
 		console.log("starting to get the contract");
 		const provider = new ethers.providers.Web3Provider(window.ethereum);
-		console.log("provider " + provider);
 
-		const signer = provider.getSigner(account);
-		console.log("signer " + signer);
+		const signer = provider.getSigner();
+
 		const contractUser = await signer.getAddress();
 		const contractUserBalance = await provider.getBalance(contractUser);
 		const amount = ethers.utils.formatEther(contractUserBalance);
@@ -56,6 +61,7 @@ export const App = () => {
 		const contract = new ethers.Contract(CONTRACT_ADDRESS, MemberRoleABI, signer);
 
 		setTheContract(contract);
+		console.log("Got the contract" + contract.address);
 		// const contract = await memberRole.attach(CONTRACT_ADDRESS);
 
 		// console.log(JSON.stringify(contract.abi));
@@ -68,9 +74,10 @@ export const App = () => {
 	}
 
 	async function addRoleType(): Promise<void> {
-		await connectContract();
+		if (theContract == null) await connectContract();
 		console.log("Add new role type : " + newRoleType);
 		if (theContract != null && newRoleType != "") {
+			console.log("start tx");
 			let tx = await theContract.addRoleType(newRoleType);
 			console.log(tx.hash);
 			await tx.wait();
@@ -80,10 +87,15 @@ export const App = () => {
 	}
 
 	async function getRoleTypesList(): Promise<void> {
-		//await connectContract();
+		//console.log(theContract?.address);
+		if (theContract == null) await connectContract();
 
 		if (theContract != null) {
+			console.log("Getting the roles");
 			const roles = await theContract.getRoleTypes();
+
+			console.log("Got the roles " + roles[0]);
+
 			setRoleTypes(roles);
 		}
 		console.log(roleTypes);
