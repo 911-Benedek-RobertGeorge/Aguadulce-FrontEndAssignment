@@ -1,6 +1,7 @@
 import { Table, Thead, Tbody, Tfoot, Tr, Th, Td, TableCaption, TableContainer, Button, Box } from "@chakra-ui/react";
 //dont think is a good idea to use that function here
-export default function Roles() {
+export default function Roles({ roles }: { roles: string[] }) {
+	if (roles == null) return <h1>To be shown</h1>;
 	return (
 		<Box>
 			<TableContainer>
@@ -12,19 +13,16 @@ export default function Roles() {
 							<Th>Ids</Th>
 						</Tr>
 					</Thead>
+
 					<Tbody>
-						<Tr>
-							<Td>inches</Td>
-							<Td>1</Td>
-						</Tr>
-						<Tr>
-							<Td>feet</Td>
-							<Td>2</Td>
-						</Tr>
-						<Tr>
-							<Td>yards</Td>
-							<Td>3</Td>
-						</Tr>
+						{roles.map((name: string, index: number) => {
+							return (
+								<Tr>
+									<Td>{name}</Td>
+									<Td>{index}</Td>
+								</Tr>
+							);
+						})}
 					</Tbody>
 				</Table>
 			</TableContainer>

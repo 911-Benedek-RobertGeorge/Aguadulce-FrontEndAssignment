@@ -12,11 +12,12 @@ import Abi from "./utils/MemberRole.json";
 import Web3 from "web3";
 import { MemberRoleABI } from "./utils/abi";
 import { stringify } from "querystring";
+import { render } from "@testing-library/react";
 export const App = () => {
 	const [isMetamaskInstalled, setIsMetamaskInstalled] = React.useState<boolean>(false);
 	const [account, setAccount] = React.useState<string>("");
 	const [theContract, setTheContract] = useState<Contract | null>(null);
-	const [newRoleType, setNewRoleType] = useState<String>("");
+	const [newRoleType, setNewRoleType] = useState<string>("");
 
 	const [roleTypes, setRoleTypes] = useState<string[] | null>(null);
 	const CONTRACT_ADDRESS = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
@@ -32,6 +33,10 @@ export const App = () => {
 		console.log("Get the contract");
 		if (account !== "" && theContract == null) connectContract();
 	}, [account]);
+
+	useEffect(() => {
+		console.log("Show the table");
+	}, [roleTypes]);
 
 	async function connectWallet(): Promise<void> {
 		//to get around type checking
@@ -81,9 +86,14 @@ export const App = () => {
 			let tx = await theContract.addRoleType(newRoleType);
 			console.log(tx.hash);
 			await tx.wait();
+			if (roleTypes !== null) {
+				roleTypes.push(newRoleType);
+			}
 			setNewRoleType("");
+
 			//if (document && document.getElementById("textRole") != null) document.getElementById("textRole").value = "";
 		}
+		render(<HookForm />);
 	}
 
 	async function getRoleTypesList(): Promise<void> {
@@ -94,11 +104,15 @@ export const App = () => {
 			console.log("Getting the roles");
 			const roles = await theContract.getRoleTypes();
 
-			console.log("Got the roles " + roles[0]);
-
 			setRoleTypes(roles);
+
+			console.log(roles);
+			let index = 0;
+			let newArr = roles.map((item: string) => {
+				return index + roles[index++];
+			});
+			console.log(newArr);
 		}
-		console.log(roleTypes);
 	}
 
 	return (
@@ -106,7 +120,7 @@ export const App = () => {
 			<Box marginTop={0} textAlign="center" fontSize="xl">
 				<ColorModeSwitcher padding={10} justifySelf="center" />
 				<VStack spacing={20}>
-					(! {account} && ASD &&
+					(! {account} &&
 					<Button onClick={connectWallet} borderRadius="50" bg="blue.400" color="white" px={100} h={20}>
 						Connect wallet
 					</Button>
@@ -125,8 +139,7 @@ export const App = () => {
 						<Button onClick={getRoleTypesList} colorScheme="teal" size="md">
 							Show Roles
 						</Button>
-
-						<Roles />
+						<Roles roles={roleTypes!} />
 					</Box>
 				</VStack>
 			</Box>
