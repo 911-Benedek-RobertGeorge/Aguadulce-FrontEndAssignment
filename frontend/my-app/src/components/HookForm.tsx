@@ -1,29 +1,71 @@
+import { Contract, ethers } from "ethers";
 import React from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-export default function HookForm() {
+export default function HookForm({ contract }: { contract: Contract }) {
 	const {
 		register,
+		getValues,
 		handleSubmit,
 		formState: { errors },
 	} = useForm();
 
-	const [data, setData] = useState("");
+	const handleChangeAddress = (event: { target: { value: React.SetStateAction<string> } }) => {
+		setAddress(event.target.value);
+	};
 
-	const onSubmit = (data: any) => console.log(data);
+	const handleChangeRole = (event: { target: { value: React.SetStateAction<string> } }) => {
+		setRole(Number(event.target.value));
+	};
+
+	const [data, setData] = useState("");
+	const [address, setAddress] = useState<string>("");
+	const [role, setRole] = useState<number>(-1);
+
+	async function addRole(): Promise<void> {
+		try {
+			if (contract != null) {
+				console.log("start assign role tx");
+
+				let addressFormat = ethers.utils.getAddress(address);
+
+				let tx = await contract.addRole(addressFormat, role);
+				console.log(tx.hash);
+				await tx.wait();
+				// if (roleTypes !== null) {
+				// 	let list = roleTypes;
+				// 	list.push(newRoleType);
+				// 	setRoleTypes(list);
+				// 	render(<HookForm />);
+				// }
+				// console.log(roleTypes);
+			}
+		} catch (err) {
+			alert("the address is not a valid address");
+		}
+	}
 	//console.log(errors);
 
 	return (
-		<form onSubmit={handleSubmit((data) => setData(JSON.stringify(data)))}>
+		<form>
 			<label>Address: </label>
-			<input type="text" placeholder="Member Address" {...(register("address"), { required: true })} />
+			<input onChange={handleChangeAddress} type="text" placeholder="Member Address" {...(register("address"), { required: true })} />
 			<br></br>
-			<label>Role: </label>
-			<input type="number" placeholder="Role Type" {...(register("roleType"), { required: true })} />
-			{errors.address && <p>Address is required.</p>}
+
+			<label> Role: </label>
+			<input
+				onChange={handleChangeRole}
+				style={{ marginTop: 10, marginBottom: 10, marginLeft: 30 }}
+				type="number"
+				placeholder="Role type id"
+				{...(register("roleType"), { required: true })}
+			/>
+
 			<p>{data}</p>
-			<input type="submit" value="Add" />
+			<button type="button" onClick={addRole} style={{ padding: 7, borderRadius: 20, backgroundColor: "#18A5D1", alignSelf: "center" }}>
+				Assign a role
+			</button>
 		</form>
 	);
 }

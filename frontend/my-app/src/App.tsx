@@ -13,6 +13,9 @@ import Web3 from "web3";
 import { MemberRoleABI } from "./utils/abi";
 import { stringify } from "querystring";
 import { render } from "@testing-library/react";
+
+import { FormControl, FormLabel, FormErrorMessage, FormHelperText } from "@chakra-ui/react";
+
 export const App = () => {
 	const [isMetamaskInstalled, setIsMetamaskInstalled] = React.useState<boolean>(false);
 	const [account, setAccount] = React.useState<string>("");
@@ -86,14 +89,44 @@ export const App = () => {
 			let tx = await theContract.addRoleType(newRoleType);
 			console.log(tx.hash);
 			await tx.wait();
-			if (roleTypes !== null) {
-				roleTypes.push(newRoleType);
-			}
+			// if (roleTypes !== null) {
+			// 	let list = roleTypes;
+			// 	list.push(newRoleType);
+			// 	setRoleTypes(list);
+			// 	render(<HookForm />);
+			// }
+			// console.log(roleTypes);
 			setNewRoleType("");
-
-			//if (document && document.getElementById("textRole") != null) document.getElementById("textRole").value = "";
 		}
-		render(<HookForm />);
+	}
+	async function addRole(): Promise<void> {
+		if (theContract != null) {
+			console.log("start assign role tx");
+			let tx = await theContract.addRole("0xf39fd6e51aad88f6f4ce6ab8827279cfffb92111", 1);
+			console.log(tx.hash);
+			await tx.wait();
+
+			getAddresses();
+			// if (roleTypes !== null) {
+			// 	let list = roleTypes;
+			// 	list.push(newRoleType);
+			// 	setRoleTypes(list);
+			// 	render(<HookForm />);
+			// }
+			// console.log(roleTypes);
+		}
+	}
+
+	// I just wanted to verify if we add any members to the contract
+	async function getAddresses(): Promise<void> {
+		if (theContract != null) {
+			console.log("Getting the addresses");
+			console.log("start assign role tx");
+			const index = await theContract.membersCount();
+
+			const addresses = await theContract.addresses(index - 1); // last added member
+			console.log(addresses);
+		}
 	}
 
 	async function getRoleTypesList(): Promise<void> {
@@ -103,15 +136,7 @@ export const App = () => {
 		if (theContract != null) {
 			console.log("Getting the roles");
 			const roles = await theContract.getRoleTypes();
-
 			setRoleTypes(roles);
-
-			console.log(roles);
-			let index = 0;
-			let newArr = roles.map((item: string) => {
-				return index + roles[index++];
-			});
-			console.log(newArr);
 		}
 	}
 
@@ -120,11 +145,10 @@ export const App = () => {
 			<Box marginTop={0} textAlign="center" fontSize="xl">
 				<ColorModeSwitcher padding={10} justifySelf="center" />
 				<VStack spacing={20}>
-					(! {account} &&
 					<Button onClick={connectWallet} borderRadius="50" bg="blue.400" color="white" px={100} h={20}>
 						Connect wallet
 					</Button>
-					)
+
 					<Box>
 						<Input id="textRole" onChange={(event) => setNewRoleType(event.target.value)} marginBottom={11} maxW="md" placeholder="Role name" />
 						<Box as="button" onClick={addRoleType} borderRadius="md" bg="blue.400" color="white" px={4} h={8}>
@@ -132,11 +156,10 @@ export const App = () => {
 						</Box>
 					</Box>
 					<Box>
-						<h1>Add a role to a member</h1>
-						<HookForm />
+						<HookForm contract={theContract!} />
 					</Box>
 					<Box>
-						<Button onClick={getRoleTypesList} colorScheme="teal" size="md">
+						<Button onClick={addRole} colorScheme="teal" size="md">
 							Show Roles
 						</Button>
 						<Roles roles={roleTypes!} />
