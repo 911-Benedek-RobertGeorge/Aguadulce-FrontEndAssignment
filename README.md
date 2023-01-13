@@ -1,7 +1,7 @@
 # Aguadulce-FrontEndAssignment
 
-Project presentation
-[I'm an inline-style link with title](https://www.loom.com/share/64ab0d96ab8b4b58b1a6222ea7f1b523 "Project presentation")
+ 
+[Project walkthrough](https://www.loom.com/share/64ab0d96ab8b4b58b1a6222ea7f1b523  )
 
 
 cd hardhat 
