@@ -93,4 +93,9 @@ contract MemberRole {
         roleTypesCount++;
         roleTypes.push(_roleType);
     }
+
+    function getRoleTypes() public view onlyOwner returns(string[] memory) {
+        return roleTypes;
+
+    }
 }
