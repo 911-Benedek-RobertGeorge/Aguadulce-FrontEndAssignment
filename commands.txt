@@ -1,0 +1,24 @@
+npm install --save-dev hardhat
+
+npx hardhat
+
+npx hardhat compile
+
+npx hardhat test -> run the tests 
+
+npx hardhat run scripts/deployMemberRole.ts
+
+ npx hardhat node -> run the hardhat network and then connect the metamask wallet to the local host(change the settings)
+
+ npx hardhat run scripts/deployMemberRole.ts --network localhost  -> deploy on localhost  
+
+
+ FRONTEND
+
+ npx create-react-app my-app --template @chakra-ui/typescript
+
+ npm install dependency-name -> installed some dependencies 
+
+
+
+ Deployed : 0x5FbDB2315678afecb367f032d93F642f64180aa3 
