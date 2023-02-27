@@ -1,4 +1,5 @@
 # Aguadulce-FrontEndAssignment
+ ![image](https://user-images.githubusercontent.com/72063093/221567549-6af9d010-f9fb-4ce5-9814-79fd8bdec26a.png)
 
  
 [Project walkthrough video](https://www.loom.com/share/64ab0d96ab8b4b58b1a6222ea7f1b523  )
@@ -34,4 +35,4 @@ FRONTEND
  
  npm start
  
- 
+
